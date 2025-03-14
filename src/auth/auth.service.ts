@@ -46,9 +46,12 @@ export class AuthService {
   }
 
   public async logout(req: Request, res: Response) {
-    await this.sessionService.destroy(req);
-    res.clearCookie(this.configService.getOrThrow<string>('SESSION_NAME'));
-
-    return true;
+    try {
+      await this.sessionService.destroy(req);
+      res.clearCookie(this.configService.getOrThrow<string>('SESSION_NAME'));
+      return 'You have successfully logget out';
+    } catch (err) {
+      return err.message;
+    }
   }
 }

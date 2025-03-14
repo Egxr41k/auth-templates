@@ -28,9 +28,11 @@ export class UserService {
   }
 
   async create(username: string, password: string) {
-    const user = await this.orm.em.create(User, {
+    const user = this.orm.em.create(User, {
       username,
       password: await hash(password),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
     if (user) {
       await this.orm.em.persistAndFlush(user);
