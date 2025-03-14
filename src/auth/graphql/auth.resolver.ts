@@ -1,44 +1,37 @@
-import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
-import { Inject, UseGuards } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
+import { AuthService } from '../auth.service';
+import { AuthInput } from './dto/auth.input';
+import { UserResponse } from './dto/user.response';
+import { Req } from '@nestjs/common';
+import { ExpressReq } from './decorators/express-req.decorator';
+import { Request } from 'express';
+import { User } from 'src/user/entity/user.entity';
 
-import { LoginGuard } from './Guards/login.gql.guard';
-import { SessionAccount } from './Decorators/session-account.gql.decorator';
-import { Session } from './Decorators/session.gql.decorator';
-import { AuthenticatedGuard } from './Guards/authenticated.gql.guard';
-
-@Resolver('User')
+@Resolver(User)
 export class AuthResolver {
-  constructor(
-    @Inject('UsersService') private readonly _usersService: UsersService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(AuthenticatedGuard)
-  @Query()
-  async user(@Args('username') username: string) {
-    return this._usersService.findOne(username);
+  @Mutation(() => UserResponse)
+  async register(
+    @Context() { req, res }: { req: any; res: any },
+    @Args('options') options: AuthInput,
+  ): Promise<UserResponse> {
+    return this.authService.register(options.username, options.password, req);
   }
 
-  @UseGuards(LoginGuard('local'))
-  @Mutation()
+  @Mutation(() => UserResponse)
   async login(
-    @SessionAccount() user,
-    @Args('username') _username: string,
-    @Args('password') _password: string,
-  ) {
-    return user;
+    @Context() { request, res },
+    @Req() req,
+    @ExpressReq() expressReq: Request,
+    @Args('options') options: AuthInput,
+  ): Promise<UserResponse> {
+    console.log(request, req, expressReq);
+    return this.authService.login(options.username, options.password, req);
   }
 
-  @UseGuards(AuthenticatedGuard)
-  @Query()
-  async views(@Session() session) {
-    session.views = (session.views || 0) + 1;
-    return session.views;
-  }
-
-  @UseGuards(AuthenticatedGuard)
-  @Query()
-  async me(@SessionAccount() user) {
-    return user;
+  @Mutation(() => Boolean)
+  public async logout(@Context() { req, res }: { req: any; res: any }) {
+    return this.authService.logout(req, res);
   }
 }

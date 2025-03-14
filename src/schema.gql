@@ -1,0 +1,36 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input AuthInput {
+  password: String!
+  username: String!
+}
+
+type FieldError {
+  field: String!
+  message: String!
+}
+
+type Mutation {
+  login(options: AuthInput!): UserResponse!
+  logout: Boolean!
+  register(options: AuthInput!): UserResponse!
+}
+
+type Query {
+  findById(id: Float!): User
+  findProfile: User
+}
+
+type User {
+  createdAt: String!
+  id: Float!
+  updatedAt: String!
+  username: String!
+}
+
+type UserResponse {
+  errors: [FieldError!]
+  user: User
+}

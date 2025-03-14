@@ -1,45 +1,39 @@
 import {
+  Body,
   Controller,
-  UseGuards,
-  Request,
+  HttpCode,
+  HttpStatus,
   Post,
-  Get,
-  Param,
-  Inject,
-  Session,
+  Req,
+  Res,
 } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
-import { AuthenticatedGuard } from './guards/authenticated.guard';
-import { LoginGuard } from './guards/login.guard';
+import { AuthService } from '../auth.service';
+import { RegisterDto } from './dto/register.dto';
+import { Request, Response } from 'express';
+import { LoginDto } from './dto/login.dto';
 
-@Controller()
+@Controller('auth')
 export class AuthController {
-  constructor(
-    @Inject('UsersService') private readonly _usersService: UsersService,
-  ) {}
+  public constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(AuthenticatedGuard)
-  @Get('user/:username')
-  async user(@Param('username') username) {
-    return this._usersService.findOne(username);
+  @Post('register')
+  @HttpCode(HttpStatus.OK)
+  public async register(@Req() req: Request, @Body() dto: RegisterDto) {
+    return this.authService.register(dto.username, dto.password, req);
   }
 
-  @UseGuards(LoginGuard('local'))
   @Post('login')
-  async login(@Request() req) {
-    return req.user;
+  @HttpCode(HttpStatus.OK)
+  public async login(@Req() req: Request, @Body() dto: LoginDto) {
+    return this.authService.login(dto.username, dto.password, req);
   }
 
-  @UseGuards(AuthenticatedGuard)
-  @Get('views')
-  getViews(@Session() session: { views?: number }) {
-    session.views = (session.views || 0) + 1;
-    return session.views;
-  }
-
-  @UseGuards(AuthenticatedGuard)
-  @Get('me')
-  async me(@Request() req) {
-    return req.user;
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  public async logout(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.logout(req, res);
   }
 }

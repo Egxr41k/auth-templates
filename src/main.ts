@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as passport from 'passport';
 import * as session from 'express-session';
 import { ConfigService } from '@nestjs/config';
+import * as cookieParser from 'cookie-parser';
 import IORedis from 'ioredis';
 import { RedisStore } from 'connect-redis';
 import { ValidationPipe } from '@nestjs/common';
@@ -42,7 +42,7 @@ async function bootstrap() {
     }),
   );
 
-  //app.use(cookieParser(config.getOrThrow<string>('COOKIES_SECRET')));
+  app.use(cookieParser(configService.getOrThrow<string>('SESSION_SECRET')));
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
@@ -50,9 +50,6 @@ async function bootstrap() {
     //origin: config.get<string>('ALLOWED_ORIGIN'),
     credentials: true,
   });
-
-  app.use(passport.initialize());
-  app.use(passport.session());
 
   await app.listen(configService.getOrThrow<number>('APPLICATION_PORT'));
 }
