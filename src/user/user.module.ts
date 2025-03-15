@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserResolver } from './user.resolver';
+import { UserController } from './rest/user.controller';
+import { UserResolver } from './graphql/user.resolver';
 
 @Module({
+  controllers: [UserController],
   providers: [UserService, UserResolver],
   exports: [UserService],
 })

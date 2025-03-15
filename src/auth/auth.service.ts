@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import { UserService } from 'src/user/user.service';
@@ -13,36 +13,18 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async register(username: string, password: string, req: Request) {
-    const user = await this.userService.create(password, username);
-    if (!user)
-      return {
-        errors: [
-          {
-            field: '',
-            message: 'registration was failed',
-          },
-        ],
-      };
-
+  async register(email: string, password: string, req: Request) {
+    const user = await this.userService.create(password, email);
+    if (!user) throw new BadRequestException();
     if (user instanceof User) await this.sessionService.save(req, `${user.id}`);
-    return { user };
+    return user;
   }
 
-  async login(username: string, password: string, req: Request) {
-    const user = await this.userService.validate(password, username);
-    if (!user)
-      return {
-        errors: [
-          {
-            field: '',
-            message: 'login was failed',
-          },
-        ],
-      };
+  async login(email: string, password: string, req: Request) {
+    const user = await this.userService.validate(password, email);
+    if (!user) throw new BadRequestException();
     await this.sessionService.save(req, `${user.id}`);
-
-    return { user };
+    return user;
   }
 
   public async logout(req: Request, res: Response) {

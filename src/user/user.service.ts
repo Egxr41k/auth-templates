@@ -23,13 +23,13 @@ export class UserService {
     return user;
   }
 
-  async findByUsername(username: string) {
-    return await this.orm.em.findOne(User, { username });
+  async findByEmail(email: string) {
+    return await this.orm.em.findOne(User, { email });
   }
 
-  async create(username: string, password: string) {
+  async create(email: string, password: string) {
     const user = this.orm.em.create(User, {
-      username,
+      email,
       password: await hash(password),
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -40,8 +40,8 @@ export class UserService {
     }
   }
 
-  async validate(username: string, password: string) {
-    const user = await this.findByUsername(username);
+  async validate(email: string, password: string) {
+    const user = await this.findByEmail(email);
     if (!user) throw new NotFoundException('User not found');
 
     const isValid = await verify(user.password, password);

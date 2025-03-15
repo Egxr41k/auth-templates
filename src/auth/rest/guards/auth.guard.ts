@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
 
     if (typeof request.session.userId === 'undefined') {
       throw new UnauthorizedException(
-        'Пользователь не авторизован, войдите в систему чтобы получить доступ.',
+        'User is not authorized, log in to access.',
       );
     }
 
