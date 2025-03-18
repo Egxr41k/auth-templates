@@ -9,10 +9,10 @@ import {
 } from '@nestjs/common';
 import { AuthService } from '../auth.service';
 import { Request, Response } from 'express';
-import { User } from 'src/user/entity/user.entity';
 import { AuthDto } from './auth.dto';
+import { UserResponse } from 'src/user/user.response';
 
-@Controller('auth')
+@Controller('session/auth')
 export class AuthController {
   public constructor(private readonly authService: AuthService) {}
 
@@ -21,13 +21,16 @@ export class AuthController {
   public async register(
     @Req() req: Request,
     @Body() dto: AuthDto,
-  ): Promise<User> {
+  ): Promise<UserResponse> {
     return this.authService.register(dto.email, dto.password, req);
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  public async login(@Req() req: Request, @Body() dto: AuthDto): Promise<User> {
+  public async login(
+    @Req() req: Request,
+    @Body() dto: AuthDto,
+  ): Promise<UserResponse> {
     return this.authService.login(dto.email, dto.password, req);
   }
 

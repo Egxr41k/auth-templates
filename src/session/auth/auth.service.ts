@@ -14,17 +14,17 @@ export class AuthService {
   ) {}
 
   async register(email: string, password: string, req: Request) {
-    const user = await this.userService.create(password, email);
+    const user = await this.userService.create(email, password);
     if (!user) throw new BadRequestException();
     if (user instanceof User) await this.sessionService.save(req, `${user.id}`);
-    return user;
+    return { user };
   }
 
   async login(email: string, password: string, req: Request) {
-    const user = await this.userService.validate(password, email);
+    const user = await this.userService.validate(email, password);
     if (!user) throw new BadRequestException();
     await this.sessionService.save(req, `${user.id}`);
-    return user;
+    return { user };
   }
 
   public async logout(req: Request, res: Response) {

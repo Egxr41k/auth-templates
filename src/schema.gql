@@ -3,34 +3,39 @@
 # ------------------------------------------------------
 
 input AuthInput {
+  email: String!
   password: String!
-  username: String!
-}
-
-type FieldError {
-  field: String!
-  message: String!
 }
 
 type Mutation {
-  login(options: AuthInput!): UserResponse!
-  logout: String!
-  register(options: AuthInput!): UserResponse!
+  accessTokenByJwt(options: RefreshTokenInput!): UserResponse!
+  loginByJwt(options: AuthInput!): UserResponse!
+  loginBySession(options: AuthInput!): UserResponse!
+  logoutBySession: String!
+  registerByJwt(options: AuthInput!): UserResponse!
+  registerBySession(options: AuthInput!): UserResponse!
 }
 
 type Query {
-  findById(id: Float!): User
-  findProfile: User
+  findByIdByJwt(id: String!): User
+  findByIdBySession(id: String!): User
+  findProfileByJwt: User
+  findProfileBySession: User
+}
+
+input RefreshTokenInput {
+  refreshToken: String!
 }
 
 type User {
   createdAt: String!
+  email: String!
   id: Float!
   updatedAt: String!
-  username: String!
 }
 
 type UserResponse {
-  errors: [FieldError!]
+  accessToken: String
+  refreshToken: String
   user: User
 }

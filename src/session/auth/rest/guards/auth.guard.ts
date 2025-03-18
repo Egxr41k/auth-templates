@@ -5,6 +5,7 @@ import {
   ForbiddenException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { User } from 'src/user/entity/user.entity';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()

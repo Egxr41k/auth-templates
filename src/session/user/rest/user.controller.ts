@@ -1,9 +1,9 @@
 import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common';
-import { UserService } from '../user.service';
-import { CurrentUser } from 'src/user/rest/decorators/user.decorator';
-import { Authentication } from 'src/auth/rest/decorators/auth.decorator';
+import { UserService } from 'src/user/user.service';
+import { CurrentUser } from 'src/session/user/rest/decorators/user.decorator';
+import { Authentication } from 'src/session/auth/rest/decorators/auth.decorator';
 
-@Controller('user')
+@Controller('session/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

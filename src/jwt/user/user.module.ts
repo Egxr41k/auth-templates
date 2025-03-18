@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UserService } from './user.service';
+import { UserService } from 'src/user/user.service';
 import { UserController } from './rest/user.controller';
 import { UserResolver } from './graphql/user.resolver';
 

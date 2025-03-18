@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { SessionModule } from 'nestjs-session';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule as JwtAuthModule } from './jwt/auth/auth.module';
+import { AuthModule as SessionAuthModule } from './session/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import config from './mikro-orm/mikro-orm.config';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
-import { join } from 'path';
 
 @Module({
   imports: [
@@ -22,12 +22,13 @@ import { join } from 'path';
     // }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile: 'src/schema.gql',
       sortSchema: true,
       context: ({ req, res }) => ({ req, res }),
     }),
     MikroOrmModule.forRoot(config),
-    AuthModule,
+    SessionAuthModule,
+    JwtAuthModule,
   ],
 })
 export class AppModule {}

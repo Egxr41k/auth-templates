@@ -1,8 +1,8 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Query, Resolver } from '@nestjs/graphql';
-import { User } from '../entity/user.entity';
-import { UserService } from '../user.service';
-import { Authentication } from 'src/auth/graphql/decorators/auth.decorator';
+import { User } from 'src/user/entity/user.entity';
+import { UserService } from 'src/user/user.service';
+import { Authentication } from 'src/session/auth/graphql/decorators/auth.decorator';
 import { CurrentUser } from './decorators/user.decorator';
 
 @Resolver()
@@ -11,12 +11,12 @@ export class UserResolver {
 
   @Query(() => User, { nullable: true })
   @Authentication()
-  async findProfile(@CurrentUser('id') userId: string) {
+  async findProfileBySession(@CurrentUser('id') userId: string) {
     return this.userService.findById(+userId);
   }
 
   @Query(() => User, { nullable: true })
-  async findById(@Args('id') id: string) {
+  async findByIdBySession(@Args('id') id: string) {
     return this.userService.findById(+id);
   }
 }

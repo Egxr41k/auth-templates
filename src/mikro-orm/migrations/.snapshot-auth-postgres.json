@@ -35,8 +35,8 @@
           "length": 0,
           "mappedType": "date"
         },
-        "username": {
-          "name": "username",
+        "email": {
+          "name": "email",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
@@ -59,10 +59,10 @@
       "indexes": [
         {
           "columnNames": [
-            "username"
+            "email"
           ],
           "composite": false,
-          "keyName": "user_username_unique",
+          "keyName": "user_email_unique",
           "constraint": true,
           "primary": false,
           "unique": true
