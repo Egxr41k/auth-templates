@@ -1,6 +1,6 @@
 import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common';
 import { CurrentUser } from 'src/session/user/rest/decorators/user.decorator';
-import { Authentication } from 'src/jwt/auth/auth.decorator';
+import { Authentication } from 'src/jwt/auth/rest/decorators/auth.decorator';
 import { UserService } from 'src/user/user.service';
 
 @Controller('jwt/user')

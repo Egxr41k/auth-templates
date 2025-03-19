@@ -4,7 +4,7 @@ import { AuthDto } from './auth.dto';
 import { UserResponse } from 'src/user/user.response';
 import { RefreshTokenDto } from './refresh-token.dto';
 
-@Controller('auth')
+@Controller('jwt/auth')
 export class AuthController {
   public constructor(private readonly authService: AuthService) {}
 

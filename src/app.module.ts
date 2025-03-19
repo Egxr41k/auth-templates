@@ -2,7 +2,9 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { SessionModule } from 'nestjs-session';
 import { AuthModule as JwtAuthModule } from './jwt/auth/auth.module';
+import { UserModule as JwtUserModule } from './jwt/user/user.module';
 import { AuthModule as SessionAuthModule } from './session/auth/auth.module';
+import { UserModule as SessionUserModule } from './session/user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import config from './mikro-orm/mikro-orm.config';
@@ -27,8 +29,10 @@ import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
       context: ({ req, res }) => ({ req, res }),
     }),
     MikroOrmModule.forRoot(config),
-    SessionAuthModule,
     JwtAuthModule,
+    JwtUserModule,
+    SessionAuthModule,
+    SessionUserModule,
   ],
 })
 export class AppModule {}
